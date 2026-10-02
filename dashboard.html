@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>receptionist — dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <button id="theme-toggle" class="theme-toggle" type="button">whimsical</button>
+
+  <main class="card">
+    <h1 class="logo">receptionist</h1>
+    <p class="tagline">welcome back</p>
+    <p id="who" class="message"></p>
+    <p class="message">dashboard coming soon</p>
+  </main>
+
+  <script>
+    // pull username from storage so we know who's here
+    const user = localStorage.getItem("receptionist_user");
+    document.getElementById("who").textContent = user ? "hi, " + user : "(not logged in)";
+
+    // theme toggle (same logic as index)
+    const THEME_KEY = "receptionist_theme";
+    const toggleBtn = document.getElementById("theme-toggle");
+    function applyTheme(mode) {
+      if (mode === "boring") {
+        document.body.classList.add("boring");
+        toggleBtn.textContent = "boring";
+      } else {
+        document.body.classList.remove("boring");
+        toggleBtn.textContent = "whimsical";
+      }
+    }
+    applyTheme(localStorage.getItem(THEME_KEY) || "whimsical");
+    toggleBtn.addEventListener("click", () => {
+      const next = document.body.classList.contains("boring") ? "whimsical" : "boring";
+      localStorage.setItem(THEME_KEY, next);
+      applyTheme(next);
+    });
+  </script>
+
+</body>
+</html>
