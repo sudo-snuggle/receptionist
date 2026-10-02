@@ -193,6 +193,25 @@ export async function onRequest(context) {
       return json({ success: true, id, status }, 200, corsHeaders);
     }
 
+        // ----------------------------------------
+    // ROUTE: POST /api/verify-viewer-pw
+    // checks the shared viewer password
+    // ----------------------------------------
+    if (path === "/api/verify-viewer-pw" && request.method === "POST") {
+      const body = await request.json();
+      const pw = (body.password || "").trim();
+
+      if (!env.VIEWER_PASSWORD) {
+        return json({ success: false, error: "viewer password not set on server" }, 500, corsHeaders);
+      }
+
+      if (pw === env.VIEWER_PASSWORD) {
+        return json({ success: true }, 200, corsHeaders);
+      }
+
+      return json({ success: false, error: "wrong password" }, 401, corsHeaders);
+    }
+
     // ----------------------------------------
     // fallback
     // ----------------------------------------

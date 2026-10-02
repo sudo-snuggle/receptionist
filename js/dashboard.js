@@ -94,3 +94,91 @@ document.getElementById("logout-btn").addEventListener("click", () => {
   localStorage.removeItem(USER_KEY);
   window.location.href = "index.html";
 });
+
+// ---------- watch videos gate ----------
+const VIEWER_URL = "http://192.168.1.4:5000";
+const PW_KEY = "receptionist_viewer_pw";
+const SKIP_WARN_KEY = "receptionist_skip_lan_warning";
+
+const watchTile = document.getElementById("watch-tile");
+const modal = document.getElementById("watch-modal");
+const pwInput = document.getElementById("viewer-pw");
+const skipWarn = document.getElementById("skip-warn");
+const modalMsg = document.getElementById("modal-msg");
+const modalGo = document.getElementById("modal-go");
+const modalCancel = document.getElementById("modal-cancel");
+
+// preload saved state
+const savedPw = localStorage.getItem(PW_KEY);
+if (savedPw) pwInput.value = savedPw;
+skipWarn.checked = localStorage.getItem(SKIP_WARN_KEY) === "1";
+
+// hide the warning paragraph if user already opted out
+function applyWarnVisibility() {
+  const warnText = modal.querySelector(".modal-body");
+  if (localStorage.getItem(SKIP_WARN_KEY) === "1") {
+    warnText.style.display = "none";
+  } else {
+    warnText.style.display = "";
+  }
+}
+
+watchTile.addEventListener("click", () => {
+  applyWarnVisibility();
+  modalMsg.textContent = "";
+  modal.hidden = false;
+  setTimeout(() => pwInput.focus(), 50);
+});
+
+modalCancel.addEventListener("click", () => {
+  modal.hidden = true;
+});
+
+modalGo.addEventListener("click", async () => {
+  const pw = pwInput.value.trim();
+  if (!pw) {
+    modalMsg.textContent = "enter the password";
+    modalMsg.classList.add("error");
+    return;
+  }
+
+  modalMsg.classList.remove("error");
+  modalMsg.textContent = "checking...";
+
+  try {
+    const res = await fetch("/api/verify-viewer-pw", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: pw })
+    });
+    const data = await res.json();
+
+    if (!data.success) {
+      modalMsg.textContent = data.error || "wrong password";
+      modalMsg.classList.add("error");
+      return;
+    }
+
+    // save password + skip preference
+    localStorage.setItem(PW_KEY, pw);
+    localStorage.setItem(SKIP_WARN_KEY, skipWarn.checked ? "1" : "0");
+
+    modalMsg.textContent = "opening...";
+    setTimeout(() => {
+      window.location.href = VIEWER_URL;
+    }, 400);
+  } catch (err) {
+    modalMsg.textContent = "could not reach server";
+    modalMsg.classList.add("error");
+  }
+});
+
+// close on escape
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !modal.hidden) modal.hidden = true;
+});
+
+// click outside to close
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) modal.hidden = true;
+});
