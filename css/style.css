@@ -1,0 +1,225 @@
+/* ===== base ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #ffe4f0;
+  --bg-2: #ffd0e6;
+  --card: #fff5fa;
+  --text: #7a2a52;
+  --muted: #b56b91;
+  --border: #ffb3d1;
+  --accent: #ff5fa2;
+  --accent-2: #ff8fc0;
+  --glow: 0 0 0 3px rgba(255, 143, 192, 0.35);
+  --shadow: 0 8px 24px rgba(255, 95, 162, 0.18);
+  --font: "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif;
+  --radius: 18px;
+}
+
+body.boring {
+  --bg: #0e0e12;
+  --bg-2: #15151c;
+  --card: #1a1a22;
+  --text: #e6e6ec;
+  --muted: #8a8a99;
+  --border: #2a2a36;
+  --accent: #6e7bff;
+  --accent-2: #8f99ff;
+  --glow: 0 0 0 3px rgba(110, 123, 255, 0.3);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius: 10px;
+}
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--font);
+  background:
+    radial-gradient(circle at 20% 10%, var(--bg-2), transparent 50%),
+    radial-gradient(circle at 80% 90%, var(--bg-2), transparent 50%),
+    var(--bg);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
+  padding: 20px;
+}
+
+/* ===== theme toggle (top right) ===== */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-family: var(--font);
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.theme-toggle:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* ===== card ===== */
+.card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px 36px 32px;
+  width: 100%;
+  max-width: 380px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  position: relative;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* whimsical-only decorations */
+body:not(.boring) .card::before {
+  content: "✿";
+  position: absolute;
+  top: -14px;
+  left: 20px;
+  font-size: 22px;
+  color: var(--accent);
+}
+
+body:not(.boring) .card::after {
+  content: "♡";
+  position: absolute;
+  bottom: -14px;
+  right: 22px;
+  font-size: 22px;
+  color: var(--accent);
+}
+
+/* ===== logo ===== */
+.logo {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+body:not(.boring) .logo {
+  text-shadow: 2px 2px 0 var(--accent-2);
+}
+
+.tagline {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 28px;
+  letter-spacing: 0.5px;
+}
+
+/* ===== split username box ===== */
+.username-box {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0;
+  margin-bottom: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.username-box:focus-within {
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+}
+
+.username-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 14px 16px;
+  font-family: var(--font);
+  font-size: 16px;
+  color: var(--text);
+  text-align: center;
+  min-width: 0;
+}
+
+.username-box input::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.username-box .divider {
+  width: 2px;
+  align-self: stretch;
+  background: var(--border);
+  margin: 8px 0;
+}
+
+#num-part {
+  flex: 0 0 70px;
+}
+
+/* ===== submit ===== */
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+  margin-top: 6px;
+}
+
+.submit-btn:hover {
+  background: var(--accent-2);
+  transform: translateY(-1px);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+body:not(.boring) .submit-btn {
+  box-shadow: 3px 3px 0 var(--text);
+}
+
+body:not(.boring) .submit-btn:active {
+  box-shadow: 1px 1px 0 var(--text);
+  transform: translate(2px, 2px);
+}
+
+/* ===== message ===== */
+.message {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 16px;
+  min-height: 18px;
+  letter-spacing: 0.3px;
+}
+
+.message.error {
+  color: #ff4d6d;
+}
+
+body.boring .message.error {
+  color: #ff6b81;
+}

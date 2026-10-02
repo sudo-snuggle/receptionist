@@ -1,0 +1,14 @@
+# nix
+result
+result-*
+
+# editor
+.vscode/
+*.swp
+
+# os
+.DS_Store
+
+# local junk
+*.log
+node_modules/
