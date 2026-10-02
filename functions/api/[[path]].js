@@ -103,7 +103,7 @@ export async function onRequest(context) {
       }
 
       // strict youtube check
-      if (!/^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/|m\.youtube\.com\/watch\?v=)[\w-]+/i.test(ytUrl)) {
+            if (!/^https?:\/\/(www\.|m\.)?(youtube\.com\/(watch\?v=|shorts\/|live\/|embed\/)|youtu\.be\/)[\w-]+/i.test(ytUrl)) {
         return json({ success: false, error: "that's not a youtube link" }, 400, corsHeaders);
       }
 
