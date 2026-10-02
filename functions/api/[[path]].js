@@ -150,6 +150,49 @@ export async function onRequest(context) {
       return json({ success: true, items: results }, 200, corsHeaders);
     }
 
+         // ----------------------------------------
+    // ROUTE: GET /api/queue/pending
+    // waiter-only — fetches everything waiting
+    // ----------------------------------------
+    if (path === "/api/queue/pending" && request.method === "GET") {
+      const waiterSecret = request.headers.get("X-Waiter-Secret");
+      if (!waiterSecret || waiterSecret !== env.WAITER_SECRET) {
+        return json({ success: false, error: "forbidden" }, 403, corsHeaders);
+      }
+
+      const { results } = await env.DB
+        .prepare("SELECT id, username, url, added_at FROM queue WHERE status = 'pending' ORDER BY added_at ASC")
+        .all();
+
+      return json({ success: true, items: results }, 200, corsHeaders);
+    }
+
+    // ----------------------------------------
+    // ROUTE: POST /api/queue/complete
+    // waiter-only — marks one item done or failed
+    // ----------------------------------------
+    if (path === "/api/queue/complete" && request.method === "POST") {
+      const waiterSecret = request.headers.get("X-Waiter-Secret");
+      if (!waiterSecret || waiterSecret !== env.WAITER_SECRET) {
+        return json({ success: false, error: "forbidden" }, 403, corsHeaders);
+      }
+
+      const body = await request.json();
+      const id = body.id;
+      const status = body.status === "failed" ? "failed" : "completed";
+
+      if (!id) {
+        return json({ success: false, error: "missing id" }, 400, corsHeaders);
+      }
+
+      await env.DB
+        .prepare("UPDATE queue SET status = ?, downloaded_at = CURRENT_TIMESTAMP WHERE id = ?")
+        .bind(status, id)
+        .run();
+
+      return json({ success: true, id, status }, 200, corsHeaders);
+    }
+
     // ----------------------------------------
     // fallback
     // ----------------------------------------
