@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hermes — add a link</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <button id="theme-toggle" class="theme-toggle" type="button">whimsical</button>
+
+  <main class="dash">
+
+    <a href="dashboard.html" class="back">← back</a>
+
+    <h1 class="hi">add a link <span class="wave">:3</span></h1>
+    <p class="sub">paste a youtube url, it'll download tonight</p>
+
+    <!-- the little character + input row -->
+    <div class="add-row">
+
+      <!-- simple animated mascot -->
+      <div class="mascot" aria-hidden="true">
+        <div class="mascot-body">
+          <div class="mascot-eye left"></div>
+          <div class="mascot-eye right"></div>
+          <div class="mascot-mouth"></div>
+        </div>
+        <div class="mascot-arm left"></div>
+        <div class="mascot-arm right"></div>
+      </div>
+
+      <!-- form -->
+      <form id="add-form" class="add-form" autocomplete="off">
+        <input
+          type="url"
+          id="url-input"
+          placeholder="https://youtube.com/watch?v=..."
+          required
+        >
+        <button type="submit" class="submit-btn">queue it</button>
+        <p id="msg" class="message"></p>
+      </form>
+
+    </div>
+
+    <!-- tonight's queue -->
+    <section class="queue-section">
+      <h2 class="section-title">tonight's lineup 🌙</h2>
+      <ul id="tonight-list" class="queue-list">
+        <li class="queue-empty">nothing yet — add something above</li>
+      </ul>
+    </section>
+
+    <!-- older links (hidden by default) -->
+    <section class="queue-section">
+      <button id="toggle-older" class="toggle-older" type="button">
+        show older links ▾
+      </button>
+      <ul id="older-list" class="queue-list" hidden></ul>
+    </section>
+
+  </main>
+
+  <script src="js/add.js"></script>
+
+</body>
+</html>

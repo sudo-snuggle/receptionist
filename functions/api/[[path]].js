@@ -88,6 +88,68 @@ export async function onRequest(context) {
       return json({ success: true, user }, 200, corsHeaders);
     }
 
+         // ----------------------------------------
+    // ROUTE: POST /api/queue/add
+    // add a youtube link to the queue
+    // ----------------------------------------
+    if (path === "/api/queue/add" && request.method === "POST") {
+      const body = await request.json();
+      const username = (body.username || "").toLowerCase().trim();
+      const deviceToken = body.deviceToken || "";
+      const ytUrl = (body.url || "").trim();
+
+      if (!username || !deviceToken || !ytUrl) {
+        return json({ success: false, error: "missing fields" }, 400, corsHeaders);
+      }
+
+      // strict youtube check
+      if (!/^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/|m\.youtube\.com\/watch\?v=)[\w-]+/i.test(ytUrl)) {
+        return json({ success: false, error: "that's not a youtube link" }, 400, corsHeaders);
+      }
+
+      // verify device token
+      const user = await env.DB
+        .prepare("SELECT * FROM users WHERE username = ? AND device_token = ?")
+        .bind(username, deviceToken)
+        .first();
+
+      if (!user) {
+        return json({ success: false, error: "not logged in" }, 403, corsHeaders);
+      }
+
+      await env.DB
+        .prepare("INSERT INTO queue (username, url) VALUES (?, ?)")
+        .bind(username, ytUrl)
+        .run();
+
+      return json({ success: true, message: "queued for tonight" }, 200, corsHeaders);
+    }
+
+    // ----------------------------------------
+    // ROUTE: GET /api/queue/mine
+    // returns this user's queue, newest first
+    // ----------------------------------------
+    if (path === "/api/queue/mine" && request.method === "GET") {
+      const username = (url.searchParams.get("username") || "").toLowerCase();
+      const deviceToken = url.searchParams.get("deviceToken") || "";
+
+      const user = await env.DB
+        .prepare("SELECT * FROM users WHERE username = ? AND device_token = ?")
+        .bind(username, deviceToken)
+        .first();
+
+      if (!user) {
+        return json({ success: false, error: "not logged in" }, 403, corsHeaders);
+      }
+
+      const { results } = await env.DB
+        .prepare("SELECT id, url, status, added_at FROM queue WHERE username = ? ORDER BY added_at DESC")
+        .bind(username)
+        .all();
+
+      return json({ success: true, items: results }, 200, corsHeaders);
+    }
+
     // ----------------------------------------
     // fallback
     // ----------------------------------------
