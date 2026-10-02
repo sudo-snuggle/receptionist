@@ -36,13 +36,44 @@
         <span class="tile-sub">queue something for tonight</span>
       </a>
 
-      <a href="#" class="card-tile" id="watch-tile">
+      <button type="button" class="card-tile" id="watch-tile">
         <span class="tile-emoji">📺</span>
         <span class="tile-title">watch videos</span>
-        <span class="tile-sub">ganymede — coming soon</span>
-      </a>
+        <span class="tile-sub">LAN only — tap to open</span>
+      </button>
 
     </section>
+  
+    <!-- watch videos gate -->
+    <div id="watch-modal" class="modal" hidden>
+      <div class="modal-card">
+        <h2 class="modal-title">one sec 🎬</h2>
+
+        <p class="modal-body">
+          this only works if you're on the <b>same wifi</b> as the server.
+        </p>
+
+        <label class="modal-check">
+          <input type="checkbox" id="skip-warn">
+          <span>don't show that warning again</span>
+        </label>
+
+        <input
+          type="password"
+          id="viewer-pw"
+          class="modal-input"
+          placeholder="viewer password"
+          autocomplete="off"
+        >
+
+        <p id="modal-msg" class="message"></p>
+
+        <div class="modal-actions">
+          <button type="button" class="modal-btn ghost" id="modal-cancel">cancel</button>
+          <button type="button" class="modal-btn solid" id="modal-go">open player</button>
+        </div>
+      </div>
+    </div>
 
   </main>
 
