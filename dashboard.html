@@ -3,44 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>receptionist — dashboard</title>
+  <title>hermes</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
   <button id="theme-toggle" class="theme-toggle" type="button">whimsical</button>
 
-  <main class="card">
-    <h1 class="logo">receptionist</h1>
-    <p class="tagline">welcome back</p>
-    <p id="who" class="message"></p>
-    <p class="message">dashboard coming soon</p>
+  <main class="dash">
+
+    <!-- greeting row -->
+    <section class="greeting">
+      <div class="greeting-text">
+        <h1 class="hi">hi, <span id="name">there</span> <span class="wave">:3</span></h1>
+        <p class="sub">you're using <b>hermes</b> dashboard</p>
+      </div>
+
+      <button id="avatar-btn" class="avatar" title="tap me" aria-label="account"></button>
+    </section>
+
+    <!-- dropdown that appears when avatar is clicked -->
+    <div id="account-menu" class="account-menu" hidden>
+      <button id="logout-btn" class="menu-item">log out 👋</button>
+    </div>
+
+    <!-- cards -->
+    <section class="cards">
+
+      <a href="add.html" class="card-tile">
+        <span class="tile-emoji">📥</span>
+        <span class="tile-title">add a youtube link</span>
+        <span class="tile-sub">queue something for tonight</span>
+      </a>
+
+      <a href="#" class="card-tile" id="watch-tile">
+        <span class="tile-emoji">📺</span>
+        <span class="tile-title">watch videos</span>
+        <span class="tile-sub">ganymede — coming soon</span>
+      </a>
+
+    </section>
+
   </main>
 
-  <script>
-    // pull username from storage so we know who's here
-    const user = localStorage.getItem("receptionist_user");
-    document.getElementById("who").textContent = user ? "hi, " + user : "(not logged in)";
-
-    // theme toggle (same logic as index)
-    const THEME_KEY = "receptionist_theme";
-    const toggleBtn = document.getElementById("theme-toggle");
-    function applyTheme(mode) {
-      if (mode === "boring") {
-        document.body.classList.add("boring");
-        toggleBtn.textContent = "boring";
-      } else {
-        document.body.classList.remove("boring");
-        toggleBtn.textContent = "whimsical";
-      }
-    }
-    applyTheme(localStorage.getItem(THEME_KEY) || "whimsical");
-    toggleBtn.addEventListener("click", () => {
-      const next = document.body.classList.contains("boring") ? "whimsical" : "boring";
-      localStorage.setItem(THEME_KEY, next);
-      applyTheme(next);
-    });
-  </script>
+  <script src="js/dashboard.js"></script>
 
 </body>
 </html>
